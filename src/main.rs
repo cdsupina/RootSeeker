@@ -7,8 +7,9 @@ mod assets;
 mod launch;
 mod louse;
 
-const FIRE_LINE: f32 = -450.0;
-const GRAVITY: f32 = -250.0;
+const FIRE_LINE: f32 = -300.0;
+const FLOOR_Y: f32 = -190.0;
+const GRAVITY: f32 = -550.0;
 
 fn main() {
     let mut app = App::new();
@@ -17,7 +18,7 @@ fn main() {
         window: WindowDescriptor {
             width: 854.0,
             height: 480.0,
-            mode: WindowMode::Fullscreen,
+            // mode: WindowMode::Fullscreen,
             ..Default::default()
         },
         ..Default::default()
@@ -77,8 +78,8 @@ pub fn setup_level_system(mut commands: Commands, asset_server: Res<AssetServer>
     commands.spawn(SpriteBundle {
         texture: asset_server.load("sprites/scalp_ground.png"),
         transform: Transform {
-            translation: Vec3::new(0.0, -300.0, -2.0),
-            scale: Vec3::new(1.5, 1.5, 1.0),
+            translation: Vec3::new(0.0, FLOOR_Y, -2.0),
+            scale: Vec3::new(1.0, 1.0, 1.0),
             ..Default::default()
         },
         ..Default::default()
@@ -89,8 +90,9 @@ pub fn setup_level_system(mut commands: Commands, asset_server: Res<AssetServer>
         .spawn(RigidBody::Fixed)
         .insert(Collider::cuboid(10000.0, 50.0))
         .insert(TransformBundle::from_transform(
-            Transform::from_translation(Vec3::new(0.0, -300.0, 0.0)),
+            Transform::from_translation(Vec3::new(0.0, FLOOR_Y - 10.0, 0.0)),
         ))
         .insert(Restitution::new(0.35))
         .insert(Friction::new(0.9));
 }
+ 
