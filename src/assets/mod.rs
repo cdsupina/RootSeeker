@@ -13,7 +13,6 @@ pub struct GameAssets {
     #[asset(path = "sprites/scalp_ground.png")]
     pub ground_image: Handle<Image>,
 
-
     #[asset(path = "sprites/hair_root.png")]
     pub hair_root_image: Handle<Image>,
 
@@ -28,15 +27,12 @@ pub struct GameAssets {
 
     #[asset(path = "sprites/hairBottom.png")]
     pub hairBottom: Handle<Image>,
-    
+
     #[asset(path = "sprites/hairMiddle.png")]
     pub hairMiddle: Handle<Image>,
 
     #[asset(path = "sprites/hairTop.png")]
     pub hairTop: Handle<Image>,
-
-    #[asset(path = "sprites/dandruff_big.png")]
-    pub dandruffBig: Handle<Image>,
 
     #[asset(path = "sounds/slingshot_release.mp3")]
     pub slingshot_release_sound: Handle<AudioSource>,
@@ -57,6 +53,9 @@ pub struct GameAssets {
     )]
     pub wahoo_sounds: Vec<Handle<AudioSource>>,
 
+    #[asset(paths("sprites/dandruff_big.png",), collection(typed))]
+    pub dandruff_big_images: Vec<Handle<Image>>,
+
     #[asset(
         paths(
             "sprites/dandruff_small1.png",
@@ -68,6 +67,16 @@ pub struct GameAssets {
     )]
     pub dandruff_small_images: Vec<Handle<Image>>,
 
+    #[asset(
+        paths(
+            "sprites/hair_flake1.png",
+            "sprites/hair_flake2.png",
+            "sprites/hair_flake3.png",
+            "sprites/hair_flake4.png",
+        ),
+        collection(typed)
+    )]
+    pub hair_flakes: Vec<Handle<Image>>,
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
 }
