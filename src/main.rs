@@ -8,9 +8,6 @@ use bevy::{
 use bevy_asset_loader::prelude::*;
 //use bevy_hanabi::prelude::*;
 use bevy_kira_audio::prelude::*;
-use bevy_parallax::{
-    LayerData, ParallaxCameraComponent, ParallaxMoveEvent, ParallaxPlugin, ParallaxResource,
-};
 use bevy_rapier2d::prelude::*;
 
 mod assets;
@@ -60,7 +57,6 @@ fn main() {
     .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     //.add_plugin(RapierDebugRenderPlugin::default())
     .add_plugin(AudioPlugin)
-    .add_plugin(ParallaxPlugin)
     //.add_plugin(HanabiPlugin)
     .add_audio_channel::<SoundEffectsAudioChannel>()
     .add_audio_channel::<GameMusicAudioChannel>()
@@ -74,41 +70,6 @@ fn main() {
     .insert_resource(level::LevelResource {
         louse_queue: LOUSE_QUEUE.to_vec(),
         lose_timer: Timer::from_seconds(LOSE_TIME, TimerMode::Once),
-    })
-    .insert_resource(ParallaxResource {
-        layer_data: vec![
-            LayerData {
-                speed: 0.9,
-                path: "sprites/hairTop.png".to_string(),
-                tile_size: Vec2::new(90.0, 90.0),
-                cols: 1,
-                rows: 1,
-                scale: 1.0,
-                z: -7.0,
-                ..Default::default()
-            },
-            LayerData {
-                speed: 0.6,
-                path: "sprites/hairMiddle.png".to_string(),
-                tile_size: Vec2::new(90.0, 90.0),
-                cols: 1,
-                rows: 1,
-                scale: 1.0,
-                z: -6.0,
-                ..Default::default()
-            },
-            LayerData {
-                speed: 0.1,
-                path: "sprites/hairBottom.png".to_string(),
-                tile_size: Vec2::new(90.0, 90.0),
-                cols: 1,
-                rows: 1,
-                scale: 1.0,
-                z: -5.0,
-                ..Default::default()
-            },
-        ],
-        ..Default::default()
     })
     .add_event::<louse::SpawnLouseEvent>()
     .add_startup_system(setup_camera);
@@ -230,8 +191,7 @@ fn setup_camera(mut commands: Commands) {
             },
             ..default()
         })
-        .insert(MainCamera)
-        .insert(ParallaxCameraComponent);
+        .insert(MainCamera);
 }
 
 // setup the 2D Rapier physics

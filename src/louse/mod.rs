@@ -105,7 +105,7 @@ pub fn spawn_louse(
                 .insert(Restitution::new(0.0))
                 .insert(ActiveEvents::COLLISION_EVENTS)
                 .insert(LouseComponent {
-                    damage: 0.5,
+                    damage: 1.2,
                     despawn_timer: Timer::from_seconds(0.1, TimerMode::Once),
                     should_explode: true,
                 })
