@@ -103,6 +103,7 @@ fn main() {
             .with_system(hair::check_roots_system)
             .with_system(level::lose_system)
             .with_system(louse::louse_behavior_system)
+            .with_system(chunks::chunk_system)
             .with_system(ui::game_ui_system), //.with_system(effects::effect_system),
     );
 

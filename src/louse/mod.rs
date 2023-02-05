@@ -1,5 +1,6 @@
 use crate::{
     assets::{self, GameAssets},
+    chunks::spawn_chunk_explosion,
     //effects::spawn_effect,
     states,
 };
@@ -78,8 +79,13 @@ pub fn spawn_louse(
                 .insert(Restitution::new(0.0))
                 .insert(ActiveEvents::COLLISION_EVENTS)
                 .insert(LouseComponent {
-                    damage: 0.5,
+                    damage: 0.8,
                     despawn_timer: Timer::from_seconds(LOUSE_DESPAWN_TIME, TimerMode::Once),
+                    should_explode: false,
+                })
+                .insert(BasicLouseComponent {
+                    jump_range_x: (-200.0, 200.0),
+                    jump_range_y: (200.0, 500.0),
                 })
                 .insert(states::AppStateComponent(states::AppStates::Game));
         }
@@ -99,8 +105,9 @@ pub fn spawn_louse(
                 .insert(Restitution::new(0.0))
                 .insert(ActiveEvents::COLLISION_EVENTS)
                 .insert(LouseComponent {
-                    damage: 0.5,
-                    despawn_timer: Timer::from_seconds(LOUSE_DESPAWN_TIME, TimerMode::Once),
+                    damage: 1.2,
+                    despawn_timer: Timer::from_seconds(0.1, TimerMode::Once),
+                    should_explode: true,
                 })
                 .insert(states::AppStateComponent(states::AppStates::Game));
         }
@@ -111,6 +118,13 @@ pub fn spawn_louse(
 pub struct LouseComponent {
     pub damage: f32,
     pub despawn_timer: Timer,
+    pub should_explode: bool,
+}
+
+#[derive(Component)]
+pub struct BasicLouseComponent {
+    pub jump_range_x: (f32, f32),
+    pub jump_range_y: (f32, f32),
 }
 
 pub fn louse_behavior_system(
@@ -130,7 +144,19 @@ pub fn louse_behavior_system(
 
         if louse_component.despawn_timer.just_finished() {
             commands.entity(louse_entity).despawn();
-            audio_channel.play(game_assets.bug_squish.clone());
+            if louse_component.should_explode {
+                spawn_chunk_explosion(
+                    &mut commands,
+                    game_assets.bug_parts.clone(),
+                    Vec2::new(louse_trans.translation.x, louse_trans.translation.y),
+                    20,
+                    1.0,
+                );
+                audio_channel.play(game_assets.bug_explode.clone());
+            } else {
+                audio_channel.play(game_assets.bug_squish.clone());
+            }
+
             /*
             spawn_effect(
                 &mut commands,

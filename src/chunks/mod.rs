@@ -1,5 +1,6 @@
-use crate::{states};
+use crate::{assets, louse, states};
 use bevy::prelude::*;
+use bevy_kira_audio::prelude::*;
 use bevy_rapier2d::prelude::*;
 use rand::{seq::SliceRandom, thread_rng, Rng};
 
@@ -52,6 +53,7 @@ pub fn spawn_chunk(
             },
             ..Default::default()
         })
+        .insert(ActiveEvents::COLLISION_EVENTS)
         .insert(RigidBody::Dynamic)
         .insert(Collider::cuboid(hitbox_size, hitbox_size))
         .insert(Velocity {
@@ -59,5 +61,49 @@ pub fn spawn_chunk(
             angvel: thread_rng().gen_range(-CHUNK_SPIN..=CHUNK_SPIN), // random spin
         })
         .insert(Restitution::new(0.0))
+        .insert(ChunkComponent)
         .insert(states::AppStateComponent(states::AppStates::Game));
+}
+
+#[derive(Component)]
+pub struct ChunkComponent;
+
+pub fn chunk_system(
+    mut commands: Commands,
+    mut chunk_query: Query<Entity, With<ChunkComponent>>,
+    mut louse_query: Query<(Entity, &mut louse::BasicLouseComponent, &mut Velocity)>,
+    mut collision_events: EventReader<CollisionEvent>,
+    game_assets: Res<assets::GameAssets>,
+    audio_channel: Res<AudioChannel<crate::SoundEffectsAudioChannel>>,
+) {
+    let mut collision_events_vec = vec![];
+    for collision_event in collision_events.iter() {
+        collision_events_vec.push(collision_event);
+    }
+
+    for chunk_entity in chunk_query.iter_mut() {
+        for (louse_entity, louse_component, mut louse_velocity) in louse_query.iter_mut() {
+            for event in collision_events_vec.iter() {
+                match event {
+                    CollisionEvent::Started(entity_1, entity_2, _) => {
+                        if (louse_entity == *entity_1 && chunk_entity == *entity_2)
+                            || (louse_entity == *entity_2 && chunk_entity == *entity_1)
+                        //&& louse_velocity.linvel.length() < 15.0
+                        {
+                            audio_channel.play(game_assets.munch.clone());
+
+                            commands.entity(chunk_entity).despawn();
+                            louse_velocity.linvel.x = thread_rng().gen_range(
+                                louse_component.jump_range_x.0..=louse_component.jump_range_x.1,
+                            );
+                            louse_velocity.linvel.y = thread_rng().gen_range(
+                                louse_component.jump_range_y.0..=louse_component.jump_range_y.1,
+                            );
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
 }
