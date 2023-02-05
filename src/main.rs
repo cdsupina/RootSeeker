@@ -11,6 +11,7 @@ mod hair;
 mod launch;
 mod louse;
 mod states;
+mod chunks;
 
 const FIRE_LINE: f32 = -300.0;
 const FLOOR_Y: f32 = -200.0;

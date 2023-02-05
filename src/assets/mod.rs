@@ -62,6 +62,30 @@ pub struct GameAssets {
     )]
     pub wahoo_sounds: Vec<Handle<AudioSource>>,
 
+    #[asset(paths("sprites/dandruff_big.png",), collection(typed))]
+    pub dandruff_big_images: Vec<Handle<Image>>,
+
+    #[asset(
+        paths(
+            "sprites/dandruff_small1.png",
+            "sprites/dandruff_small2.png",
+            "sprites/dandruff_small3.png",
+            "sprites/dandruff_small4.png",
+        ),
+        collection(typed)
+    )]
+    pub dandruff_small_images: Vec<Handle<Image>>,
+
+    #[asset(
+        paths(
+            "sprites/hair_flake1.png",
+            "sprites/hair_flake2.png",
+            "sprites/hair_flake3.png",
+            "sprites/hair_flake4.png",
+        ),
+        collection(typed)
+    )]
+    pub hair_flakes: Vec<Handle<Image>>,
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
 }

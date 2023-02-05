@@ -3,8 +3,9 @@ use std::time::Duration;
 use bevy::{app::AppExit, prelude::*};
 use bevy_kira_audio::prelude::*;
 use bevy_rapier2d::prelude::*;
+use rand::{thread_rng, Rng};
 
-use crate::{assets, hair};
+use crate::{assets, chunks, hair};
 
 // states of the game
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -178,6 +179,32 @@ pub fn setup_game_system(
     hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(350.0, -130.0));
     hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(170.0, -130.0));
     hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(-190.0, -130.0));
+
+    // spawn dandruff chunks
+    let num_chunks: i32 = 15;
+    let mut i = 0;
+    while i < num_chunks {
+        chunks::spawn_chunk(
+            &mut commands,
+            sprite_assets.dandruff_big_images.clone(),
+            Vec2::new(
+                thread_rng().gen_range(-300.0..=400.0),
+                thread_rng().gen_range(-100.0..=300.0),
+            ),
+            Vec2::new(0.0, -10.0),
+            10.0
+        );
+        i = i + 1;
+    }
+
+    // // example of a hair explosion
+    // chunks::spawn_chunk_explosion(
+    //     &mut commands,
+    //     sprite_assets.hair_flakes.clone(),
+    //     Vec2::new(0.0, 0.0),
+    //     10,
+    //     0.5
+    // );
 }
 
 // setup level of the game
