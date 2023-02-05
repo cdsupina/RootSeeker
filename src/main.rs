@@ -1,5 +1,12 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::*,
+    render::{
+        camera::ScalingMode,
+        settings::{WgpuFeatures, WgpuSettings},
+    },
+};
 use bevy_asset_loader::prelude::*;
+//use bevy_hanabi::prelude::*;
 use bevy_kira_audio::prelude::*;
 use bevy_parallax::{
     LayerData, ParallaxCameraComponent, ParallaxMoveEvent, ParallaxPlugin, ParallaxResource,
@@ -7,17 +14,37 @@ use bevy_parallax::{
 use bevy_rapier2d::prelude::*;
 
 mod assets;
+mod chunks;
+//mod effects;
 mod hair;
 mod launch;
+mod level;
 mod louse;
 mod states;
-mod chunks;
+mod ui;
 
 const FIRE_LINE: f32 = -300.0;
 const FLOOR_Y: f32 = -200.0;
 const GRAVITY: f32 = -550.0;
+const LOUSE_QUEUE: [louse::LouseType; 8] = [
+    louse::LouseType::Basic,
+    louse::LouseType::Exploding,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+    louse::LouseType::Exploding,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+];
+const LOSE_TIME: f32 = 2.0;
 
 fn main() {
+    /*
+        let mut options = WgpuSettings::default();
+        options
+            .features
+            .set(WgpuFeatures::VERTEX_WRITABLE_STORAGE, true);
+    */
     let mut app = App::new();
 
     app.add_plugins(DefaultPlugins.set(WindowPlugin {
@@ -34,13 +61,19 @@ fn main() {
     .add_plugin(RapierDebugRenderPlugin::default())
     .add_plugin(AudioPlugin)
     .add_plugin(ParallaxPlugin)
+    //.add_plugin(HanabiPlugin)
     .add_audio_channel::<SoundEffectsAudioChannel>()
     .add_audio_channel::<GameMusicAudioChannel>()
     .add_audio_channel::<MenuMusicAudioChannel>()
+    //.insert_resource(options)
     .insert_resource(ClearColor(Color::BLACK))
     .insert_resource(launch::LaunchResource {
         velocity_multiplier: 7.0,
         ..Default::default()
+    })
+    .insert_resource(level::LevelResource {
+        louse_queue: LOUSE_QUEUE.to_vec(),
+        lose_timer: Timer::from_seconds(LOSE_TIME, TimerMode::Once),
     })
     .insert_resource(ParallaxResource {
         layer_data: vec![
@@ -106,7 +139,10 @@ fn main() {
             .with_system(states::start_gameover_system)
             .with_system(states::start_victory_system)
             .with_system(hair::hair_system)
-            .with_system(hair::check_roots_system),
+            .with_system(hair::check_roots_system)
+            .with_system(level::lose_system)
+            .with_system(louse::louse_behavior_system)
+            .with_system(ui::game_ui_system), //.with_system(effects::effect_system),
     );
 
     app.add_system_set(
@@ -185,7 +221,12 @@ pub struct MainCamera;
 fn setup_camera(mut commands: Commands) {
     commands
         .spawn(Camera2dBundle {
-            transform: Transform::from_xyz(0.0, 0.0, 10.0),
+            transform: Transform::from_xyz(0.0, 0.0, 200.0),
+            projection: OrthographicProjection {
+                //scale: 1.0,
+                //scaling_mode: ScalingMode::FixedVertical(1.),
+                ..Default::default()
+            },
             ..default()
         })
         .insert(MainCamera)

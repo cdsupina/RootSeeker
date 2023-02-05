@@ -1,11 +1,19 @@
 use std::time::Duration;
 
-use bevy::{app::AppExit, prelude::*};
+use bevy::{app::AppExit, log::Level, prelude::*};
 use bevy_kira_audio::prelude::*;
 use bevy_rapier2d::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::{assets, chunks, hair};
+//use bevy_hanabi::prelude::*;
+
+use crate::{
+    assets,
+    chunks,
+    //effects::EffectTimer,
+    hair,
+    level::{self, LevelResource},
+};
 
 // states of the game
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -119,7 +127,26 @@ pub fn setup_game_system(
     sprite_assets: Res<assets::GameAssets>,
     audio_channel: Res<AudioChannel<crate::GameMusicAudioChannel>>,
     game_assets: Res<assets::GameAssets>,
+    mut level_resource: ResMut<level::LevelResource>,
 ) {
+    // Create a color gradient for the particles
+
+    /*
+    commands
+        .spawn(ParticleEffectBundle {
+            // Assign the Z layer so it appears in the egui inspector and can be modified at runtime
+            effect: ParticleEffect::new(effect).with_z_layer_2d(Some(5.0)),
+            ..default()
+        })
+        .insert(Name::new("effect:2d"));
+    */
+
+    // reset level resource
+    *level_resource = LevelResource {
+        louse_queue: crate::LOUSE_QUEUE.to_vec(),
+        lose_timer: Timer::from_seconds(crate::LOSE_TIME, TimerMode::Once),
+    };
+
     audio_channel
         .play(game_assets.game_music.clone())
         .fade_in(AudioTween::new(

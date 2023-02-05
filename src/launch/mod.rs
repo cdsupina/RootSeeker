@@ -1,4 +1,4 @@
-use crate::{assets, louse};
+use crate::{assets, level::LevelResource, louse};
 use bevy::prelude::*;
 use bevy_kira_audio::prelude::*;
 
@@ -14,6 +14,7 @@ pub fn fling_louse_system(
     mouse_button: Res<Input<MouseButton>>,
     mut spawn_louse_events: EventWriter<louse::SpawnLouseEvent>,
     mut fling_resource: ResMut<LaunchResource>,
+    mut level_resource: ResMut<LevelResource>,
     audio_channel: Res<AudioChannel<crate::SoundEffectsAudioChannel>>,
     game_assets: Res<assets::GameAssets>,
 ) {
@@ -25,9 +26,11 @@ pub fn fling_louse_system(
             get_cursor_physics_position(camera, camera_gl_transform, curr_window);
 
         if let Some(initial_pos_val) = initial_position {
-            if initial_pos_val.x < crate::FIRE_LINE {
+            if initial_pos_val.x < crate::FIRE_LINE && !level_resource.louse_queue.is_empty() {
                 fling_resource.initial_position = initial_position;
                 audio_channel.play(game_assets.slingshot_pull_sound.clone());
+            } else {
+                audio_channel.play(game_assets.rrnt.clone());
             }
         }
     } else if mouse_button.just_released(MouseButton::Left) {
@@ -45,11 +48,24 @@ pub fn fling_louse_system(
                     audio_channel.stop();
 
                     audio_channel.play(game_assets.slingshot_release_sound.clone());
-                    spawn_louse_events.send(louse::SpawnLouseEvent {
-                        position: final_pos_val,
-                        velocity,
-                    });
+
+                    let louse_type = level_resource.louse_queue.pop();
+
+                    if let Some(louse_type) = louse_type {
+                        spawn_louse_events.send(louse::SpawnLouseEvent {
+                            position: final_pos_val,
+                            velocity,
+                            louse_type,
+                        });
+                    } else {
+                        // TODO: Lose the game
+                    }
+                } else {
+                    audio_channel.stop();
+                    audio_channel.play(game_assets.rrnt.clone());
                 }
+            } else {
+                audio_channel.play(game_assets.rrnt.clone());
             }
         }
         fling_resource.initial_position = None;
