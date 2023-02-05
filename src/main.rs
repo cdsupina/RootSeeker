@@ -58,7 +58,7 @@ fn main() {
         ..Default::default()
     }))
     .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-    .add_plugin(RapierDebugRenderPlugin::default())
+    //.add_plugin(RapierDebugRenderPlugin::default())
     .add_plugin(AudioPlugin)
     .add_plugin(ParallaxPlugin)
     //.add_plugin(HanabiPlugin)
