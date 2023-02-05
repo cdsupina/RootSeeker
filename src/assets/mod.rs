@@ -7,7 +7,7 @@ pub struct GameAssets {
     #[asset(path = "sprites/bugLouse.png")]
     pub basic_louse_image: Handle<Image>,
 
-    #[asset(path = "sprites/skibug.png")]
+    #[asset(path = "sprites/bugDynamite.png")]
     pub exploding_louse_image: Handle<Image>,
 
     #[asset(path = "sprites/dashedLine.png")]
@@ -96,6 +96,17 @@ pub struct GameAssets {
     )]
     pub hair_flakes: Vec<Handle<Image>>,
 
+    #[asset(
+        paths(
+            "sprites/bug_part1.png",
+            "sprites/bug_part2.png",
+            "sprites/bug_part3.png",
+            "sprites/bug_part4.png",
+        ),
+        collection(typed)
+    )]
+    pub bug_parts: Vec<Handle<Image>>,
+
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
 
@@ -107,6 +118,12 @@ pub struct GameAssets {
 
     #[asset(path = "sounds/bug_squish.mp3")]
     pub bug_squish: Handle<AudioSource>,
+
+    #[asset(path = "sounds/munch.mp3")]
+    pub munch: Handle<AudioSource>,
+
+    #[asset(path = "sounds/bug_explode.wav")]
+    pub bug_explode: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]
