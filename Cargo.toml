@@ -15,7 +15,6 @@ bevy_asset_loader = { version = "0.14.1", features = [
 ] }
 rand = "0.8.5"
 bevy_kira_audio = { version = "0.13.0", features = ["mp3", "wav"] }
-bevy-parallax = "0.3.0"
 #bevy_hanabi = "0.5.2"
 
 
