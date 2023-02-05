@@ -35,12 +35,14 @@ pub struct GameAssets {
     #[asset(path = "sprites/hairTop.png")]
     pub hairTop: Handle<Image>,
 
+    #[asset(path = "sprites/dandruff_big.png")]
+    pub dandruffBig: Handle<Image>,
+
     #[asset(path = "sounds/slingshot_release.mp3")]
     pub slingshot_release_sound: Handle<AudioSource>,
 
     #[asset(path = "sounds/slingshot_pull.mp3")]
     pub slingshot_pull_sound: Handle<AudioSource>,
-
 
     #[asset(
         paths(
@@ -54,6 +56,17 @@ pub struct GameAssets {
         collection(typed)
     )]
     pub wahoo_sounds: Vec<Handle<AudioSource>>,
+
+    #[asset(
+        paths(
+            "sprites/dandruff_small1.png",
+            "sprites/dandruff_small2.png",
+            "sprites/dandruff_small3.png",
+            "sprites/dandruff_small4.png",
+        ),
+        collection(typed)
+    )]
+    pub dandruff_small_images: Vec<Handle<Image>>,
 
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
