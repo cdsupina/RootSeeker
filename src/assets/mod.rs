@@ -108,6 +108,14 @@ pub struct GameAssets {
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
 
+
+    //put in gameover assetts later
+    #[asset(path = "sprites/game_over.png")]
+    pub game_over: Handle<Image>,
+
+    #[asset(path = "sprites/win_screen.png")]
+    pub win_screen: Handle<Image>,
+
     #[asset(path = "sounds/hair_die.mp3")]
     pub hair_die: Handle<AudioSource>,
 
@@ -116,6 +124,7 @@ pub struct GameAssets {
 
     #[asset(path = "sounds/bug_squish.mp3")]
     pub bug_squish: Handle<AudioSource>,
+
 }
 
 #[derive(AssetCollection, Resource)]
@@ -125,4 +134,32 @@ pub struct MenuAssets {
 
     #[asset(path = "sounds/celebration.mp3")]
     pub celebration: Handle<AudioSource>,
+
+    //image assetts
+    #[asset(path = "sprites/menu_title.png")]
+    pub menu_title: Handle<Image>,
+
+    #[asset(path = "sprites/button_go_default.png")]
+    pub button_go_default: Handle <Image>,
+
+    #[asset(path = "sprites/button_go_selected.png")]
+    pub button_go_selected: Handle <Image>,
+
+    #[asset(path = "sprites/menu_button_start.png")]
+    pub menu_button_start: Handle <Image>,
+
+    #[asset(path = "sprites/menu_button_start_selected.png")]
+    pub menu_button_start_selected: Handle <Image>,
+
+    #[asset(path = "sprites/menu_button_credits.png")]
+    pub menu_button_credits: Handle <Image>,
+
+    #[asset(path = "sprites/menu_button_credits_selected.png")]
+    pub menu_button_credits_selected: Handle <Image>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct GameOverAssets {
+    // #[asset(path = "sprites/game_over.png")]
+    // pub game_over: Handle<Image>,
 }
