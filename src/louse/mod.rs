@@ -58,5 +58,12 @@ pub fn spawn_louse(
             angvel: thread_rng().gen_range(-LOUSE_SPIN..=LOUSE_SPIN), // random spin
         })
         .insert(Restitution::new(0.0))
+        .insert(ActiveEvents::COLLISION_EVENTS)
+        .insert(LouseComponent { damage: 0.5 })
         .insert(states::AppStateComponent(states::AppStates::Game));
+}
+
+#[derive(Component)]
+pub struct LouseComponent {
+    pub damage: f32,
 }

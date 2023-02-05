@@ -192,19 +192,10 @@ pub fn setup_game_system(
                 thread_rng().gen_range(-100.0..=300.0),
             ),
             Vec2::new(0.0, -10.0),
-            10.0
+            10.0,
         );
         i = i + 1;
     }
-
-    // // example of a hair explosion
-    // chunks::spawn_chunk_explosion(
-    //     &mut commands,
-    //     sprite_assets.hair_flakes.clone(),
-    //     Vec2::new(0.0, 0.0),
-    //     10,
-    //     0.5
-    // );
 }
 
 // setup level of the game
