@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 use bevy_kira_audio::prelude::*;
-use bevy_rapier2d::prelude::*;
 use bevy_parallax::{
     LayerData, ParallaxCameraComponent, ParallaxMoveEvent, ParallaxPlugin, ParallaxResource,
 };
+use bevy_rapier2d::prelude::*;
 
 mod assets;
 mod hair;
@@ -24,6 +24,7 @@ fn main() {
             width: 854.0,
             height: 480.0,
             // mode: WindowMode::Fullscreen,
+            resizable: false,
             ..Default::default()
         },
         ..Default::default()
@@ -102,7 +103,9 @@ fn main() {
             .with_system(launch::fling_louse_system.label("fling_louse"))
             .with_system(louse::spawn_louse_system.after("fling_louse"))
             .with_system(states::start_gameover_system)
-            .with_system(states::start_victory_system),
+            .with_system(states::start_victory_system)
+            .with_system(hair::hair_system)
+            .with_system(hair::check_roots_system),
     );
 
     app.add_system_set(

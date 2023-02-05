@@ -13,7 +13,6 @@ pub struct GameAssets {
     #[asset(path = "sprites/scalp_ground.png")]
     pub ground_image: Handle<Image>,
 
-
     #[asset(path = "sprites/hair_root.png")]
     pub hair_root_image: Handle<Image>,
 
@@ -23,12 +22,21 @@ pub struct GameAssets {
     #[asset(path = "sprites/hair_top.png")]
     pub hair_top_image: Handle<Image>,
 
+    #[asset(path = "sprites/hair_top_broken.png")]
+    pub hair_top_broken_image: Handle<Image>,
+
+    #[asset(path = "sprites/hair_bottom_broken.png")]
+    pub hair_bottom_broken_image: Handle<Image>,
+
+    #[asset(path = "sprites/hair_root_broken.png")]
+    pub hair_root_broken_image: Handle<Image>,
+
     #[asset(path = "sprites/backGround.png")]
     pub backGround: Handle<Image>,
 
     #[asset(path = "sprites/hairBottom.png")]
     pub hairBottom: Handle<Image>,
-    
+
     #[asset(path = "sprites/hairMiddle.png")]
     pub hairMiddle: Handle<Image>,
 
@@ -40,7 +48,6 @@ pub struct GameAssets {
 
     #[asset(path = "sounds/slingshot_pull.mp3")]
     pub slingshot_pull_sound: Handle<AudioSource>,
-
 
     #[asset(
         paths(

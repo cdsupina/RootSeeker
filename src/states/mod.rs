@@ -149,18 +149,18 @@ pub fn setup_game_system(
         })
         .insert(AppStateComponent(AppStates::Game));
 
-            // spawn the ground image
+    // spawn the ground image
     commands
-    .spawn(SpriteBundle {
-        texture: sprite_assets.ground_image.clone(),
-        transform: Transform {
-            translation: Vec3::new(0.0, crate::FLOOR_Y, -2.0),
-            scale: Vec3::new(1.5, 1.5, 1.0),
+        .spawn(SpriteBundle {
+            texture: sprite_assets.ground_image.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, crate::FLOOR_Y, -2.0),
+                scale: Vec3::new(1.5, 1.5, 1.0),
+                ..Default::default()
+            },
             ..Default::default()
-        },
-        ..Default::default()
-    })
-    .insert(AppStateComponent(AppStates::Game));
+        })
+        .insert(AppStateComponent(AppStates::Game));
 
     // spawn ground hitbox
     commands
