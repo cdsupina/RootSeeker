@@ -55,6 +55,9 @@ pub struct GameAssets {
     #[asset(path = "sprites/hairTop.png")]
     pub hairTop: Handle<Image>,
 
+    #[asset(path = "sprites/prompt.png")]
+    pub prompt: Handle<Image>,
+
     #[asset(path = "sounds/slingshot_release.mp3")]
     pub slingshot_release_sound: Handle<AudioSource>,
 

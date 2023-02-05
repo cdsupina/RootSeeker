@@ -209,6 +209,19 @@ pub fn setup_game_system(
         })
         .insert(AppStateComponent(AppStates::Game));
 
+    // spawn the prompt/instructions
+    commands
+        .spawn(SpriteBundle {
+            texture: sprite_assets.prompt.clone(),
+            transform: Transform {
+                translation: Vec3::new(-370.0,180.0, -2.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::Game));
+
     // spawn the ground image
     commands
         .spawn(SpriteBundle {
