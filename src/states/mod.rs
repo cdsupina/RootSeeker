@@ -136,7 +136,7 @@ pub fn setup_game_system(
         })
         .insert(AppStateComponent(AppStates::Game));
 
-    // spawn the ground image
+    // spawn the background
     commands
         .spawn(SpriteBundle {
             texture: sprite_assets.backGround.clone(),
@@ -182,6 +182,7 @@ pub fn setup_game_system(
 
 // setup level of the game
 pub fn setup_main_menu_system(
+    mut commands: Commands,
     menu_music_audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
     menu_assets: Res<assets::MenuAssets>,
 ) {
@@ -192,6 +193,42 @@ pub fn setup_main_menu_system(
             AudioEasing::Linear,
         ))
         .looped();
+
+        commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.menuTitle.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, 0.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::MainMenu));
+
+        commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.menu_button_start.clone(),
+            transform: Transform {
+                translation: Vec3::new(-150.0, -50.0, 0.1),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::MainMenu));
+
+        commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.menu_button_credits.clone(),
+            transform: Transform {
+                translation: Vec3::new(-150.0, -125.0, 0.1),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::MainMenu));
 }
 
 pub fn clean_up_main_menu_system(audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>) {
