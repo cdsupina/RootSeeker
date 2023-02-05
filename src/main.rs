@@ -8,8 +8,9 @@ mod launch;
 mod louse;
 mod states;
 
-const FIRE_LINE: f32 = -450.0;
-const GRAVITY: f32 = -250.0;
+const FIRE_LINE: f32 = -300.0;
+const FLOOR_Y: f32 = -190.0;
+const GRAVITY: f32 = -550.0;
 
 fn main() {
     let mut app = App::new();
@@ -18,7 +19,7 @@ fn main() {
         window: WindowDescriptor {
             width: 854.0,
             height: 480.0,
-            mode: WindowMode::Fullscreen,
+            // mode: WindowMode::Fullscreen,
             ..Default::default()
         },
         ..Default::default()

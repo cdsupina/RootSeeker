@@ -141,7 +141,7 @@ pub fn setup_game_system(
         .spawn(SpriteBundle {
             texture: sprite_assets.ground_image.clone(),
             transform: Transform {
-                translation: Vec3::new(0.0, -300.0, -2.0),
+                translation: Vec3::new(0.0, crate::FLOOR_Y, -2.0),
                 scale: Vec3::new(1.5, 1.5, 1.0),
                 ..Default::default()
             },
@@ -154,7 +154,7 @@ pub fn setup_game_system(
         .spawn(RigidBody::Fixed)
         .insert(Collider::cuboid(10000.0, 50.0))
         .insert(TransformBundle::from_transform(
-            Transform::from_translation(Vec3::new(0.0, -300.0, 0.0)),
+            Transform::from_translation(Vec3::new(0.0, crate::FLOOR_Y, 0.0)),
         ))
         .insert(Restitution::new(0.35))
         .insert(Friction::new(0.9))
