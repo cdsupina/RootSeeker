@@ -6,6 +6,7 @@ use bevy_rapier2d::prelude::*;
 mod assets;
 mod launch;
 mod louse;
+mod states;
 
 const FIRE_LINE: f32 = -300.0;
 const FLOOR_Y: f32 = -190.0;
@@ -27,23 +28,111 @@ fn main() {
     .add_plugin(RapierDebugRenderPlugin::default())
     .add_plugin(AudioPlugin)
     .add_audio_channel::<SoundEffectsAudioChannel>()
+    .add_audio_channel::<GameMusicAudioChannel>()
+    .add_audio_channel::<MenuMusicAudioChannel>()
     .insert_resource(ClearColor(Color::BLACK))
     .insert_resource(launch::LaunchResource {
         velocity_multiplier: 7.0,
         ..Default::default()
     })
     .add_event::<louse::SpawnLouseEvent>()
-    .add_startup_system(setup_camera)
-    .add_startup_system(setup_physics)
-    .add_startup_system(setup_level_system)
-    .add_system(launch::fling_louse_system.label("fling_louse"))
-    .add_system(louse::spawn_louse_system.after("fling_louse"));
+    .add_startup_system(setup_camera);
+
+    app.add_state(states::AppStates::LoadingMainMenu); // start game in the main menu state
+    app.add_loading_state(
+        LoadingState::new(states::AppStates::LoadingGame)
+            .continue_to_state(states::AppStates::Game)
+            .with_collection::<assets::GameAssets>(),
+    );
+
+    app.add_loading_state(
+        LoadingState::new(states::AppStates::LoadingMainMenu)
+            .continue_to_state(states::AppStates::MainMenu)
+            .with_collection::<assets::MenuAssets>(),
+    );
+
+    app.add_system_set(
+        SystemSet::on_enter(states::AppStates::Game)
+            .with_system(setup_physics.label("init"))
+            .with_system(states::setup_game_system.after("init")),
+    );
+
+    app.add_system_set(
+        SystemSet::on_update(states::AppStates::Game)
+            .with_system(launch::fling_louse_system.label("fling_louse"))
+            .with_system(louse::spawn_louse_system.after("fling_louse"))
+            .with_system(states::start_gameover_system)
+            .with_system(states::start_victory_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_exit(states::AppStates::Game)
+            .with_system(states::clean_up_game_system)
+            .with_system(states::clear_state_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_enter(states::AppStates::MainMenu)
+            .with_system(states::setup_main_menu_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_update(states::AppStates::MainMenu)
+            .with_system(states::start_game_system)
+            .with_system(states::quit_game_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_exit(states::AppStates::MainMenu)
+            .with_system(states::clear_state_system)
+            .with_system(states::clean_up_main_menu_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_enter(states::AppStates::GameOver)
+            .with_system(states::setup_gameover_menu_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_update(states::AppStates::GameOver)
+            .with_system(states::start_game_system)
+            .with_system(states::quit_game_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_exit(states::AppStates::GameOver)
+            .with_system(states::clear_state_system)
+            .with_system(states::clean_up_gameover_menu_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_enter(states::AppStates::Victory)
+            .with_system(states::setup_victory_menu_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_update(states::AppStates::Victory)
+            .with_system(states::start_game_system)
+            .with_system(states::quit_game_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_exit(states::AppStates::Victory)
+            .with_system(states::clear_state_system)
+            .with_system(states::clean_up_victory_menu_system),
+    );
 
     app.run();
 }
 
 #[derive(Resource)]
 pub struct SoundEffectsAudioChannel;
+
+#[derive(Resource)]
+pub struct GameMusicAudioChannel;
+
+#[derive(Resource)]
+pub struct MenuMusicAudioChannel;
 
 #[derive(Component)]
 pub struct MainCamera;
@@ -64,35 +153,3 @@ fn setup_physics(mut rapier_config: ResMut<RapierConfiguration>) {
     rapier_config.query_pipeline_active = true;
     rapier_config.gravity = Vec2::new(0.0, GRAVITY);
 }
-
-// setup level of the game
-pub fn setup_level_system(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // spawn fire line indicator
-    commands.spawn(SpriteBundle {
-        texture: asset_server.load("sprites/dashedLine.png"),
-        transform: Transform::from_translation(Vec3::new(FIRE_LINE, 0.0, -1.0)),
-        ..Default::default()
-    });
-
-    // spawn the ground image
-    commands.spawn(SpriteBundle {
-        texture: asset_server.load("sprites/scalp_ground.png"),
-        transform: Transform {
-            translation: Vec3::new(0.0, FLOOR_Y, -2.0),
-            scale: Vec3::new(1.0, 1.0, 1.0),
-            ..Default::default()
-        },
-        ..Default::default()
-    });
-
-    // spawn ground hitbox
-    commands
-        .spawn(RigidBody::Fixed)
-        .insert(Collider::cuboid(10000.0, 50.0))
-        .insert(TransformBundle::from_transform(
-            Transform::from_translation(Vec3::new(0.0, FLOOR_Y - 10.0, 0.0)),
-        ))
-        .insert(Restitution::new(0.35))
-        .insert(Friction::new(0.9));
-}
- 
