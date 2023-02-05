@@ -4,7 +4,7 @@ use bevy::{app::AppExit, prelude::*};
 use bevy_kira_audio::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::assets;
+use crate::{assets, hair};
 
 // states of the game
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -172,6 +172,12 @@ pub fn setup_game_system(
         .insert(Restitution::new(0.35))
         .insert(Friction::new(0.9))
         .insert(AppStateComponent(AppStates::Game));
+
+    // spawn hairs
+    hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(0.0, -130.0));
+    hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(350.0, -130.0));
+    hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(170.0, -130.0));
+    hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(-190.0, -130.0));
 }
 
 // setup level of the game

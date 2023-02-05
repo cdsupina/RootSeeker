@@ -7,12 +7,13 @@ use bevy_parallax::{
 };
 
 mod assets;
+mod hair;
 mod launch;
 mod louse;
 mod states;
 
 const FIRE_LINE: f32 = -300.0;
-const FLOOR_Y: f32 = -190.0;
+const FLOOR_Y: f32 = -200.0;
 const GRAVITY: f32 = -550.0;
 
 fn main() {
