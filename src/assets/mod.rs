@@ -7,6 +7,9 @@ pub struct GameAssets {
     #[asset(path = "sprites/bugLouse.png")]
     pub basic_louse_image: Handle<Image>,
 
+    #[asset(path = "sprites/skibug.png")]
+    pub exploding_louse_image: Handle<Image>,
+
     #[asset(path = "sprites/dashedLine.png")]
     pub fire_line_image: Handle<Image>,
 
@@ -98,6 +101,12 @@ pub struct GameAssets {
 
     #[asset(path = "sounds/hair_die.mp3")]
     pub hair_die: Handle<AudioSource>,
+
+    #[asset(path = "sounds/RRNT.mp3")]
+    pub rrnt: Handle<AudioSource>,
+
+    #[asset(path = "sounds/bug_squish.mp3")]
+    pub bug_squish: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]
