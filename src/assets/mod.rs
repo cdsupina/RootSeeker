@@ -34,6 +34,15 @@ pub struct GameAssets {
     #[asset(path = "sprites/hair_root_broken.png")]
     pub hair_root_broken_image: Handle<Image>,
 
+    #[asset(path = "sprites/hair_root_damage.png")]
+    pub hair_root_damage_image: Handle<Image>,
+
+    #[asset(path = "sprites/hair_bottom_damage.png")]
+    pub hair_bottom_damage_image: Handle<Image>,
+
+    #[asset(path = "sprites/hair_top_damage.png")]
+    pub hair_top_damage_image: Handle<Image>,
+
     #[asset(path = "sprites/backGround.png")]
     pub backGround: Handle<Image>,
 

@@ -25,7 +25,10 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
     let base_radius = 14.0;
     let radius_decay = 0.65;
 
-    let num_mid_segments = 10 - (thread_rng().gen_range(MID_SEG_LOW..=MID_SEG_HIGH) as f32).sqrt().floor() as i32;
+    let num_mid_segments = 10
+        - (thread_rng().gen_range(MID_SEG_LOW..=MID_SEG_HIGH) as f32)
+            .sqrt()
+            .floor() as i32;
     // create root segment
     let root_entity = commands
         .spawn(SpriteBundle {
@@ -41,7 +44,10 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
         .insert(HairComponent {
             max_health: 500.0,
             health: 500.0,
+            orig_image: game_assets.hair_root_image.clone(),
             broken_image: game_assets.hair_root_broken_image.clone(),
+            damage_image: game_assets.hair_root_damage_image.clone(),
+            time_last_hit: f32::MIN,
         })
         .insert(RootComponent)
         .id();
@@ -78,7 +84,10 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
             .insert(HairComponent {
                 max_health: 450.0,
                 health: 450.0,
+                orig_image: game_assets.hair_bottom_image.clone(),
                 broken_image: game_assets.hair_bottom_broken_image.clone(),
+                damage_image: game_assets.hair_bottom_damage_image.clone(),
+                time_last_hit: f32::MIN,
             })
             .id();
 
@@ -119,7 +128,10 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
         .insert(HairComponent {
             max_health: 400.0,
             health: 400.0,
+            orig_image: game_assets.hair_top_image.clone(),
             broken_image: game_assets.hair_top_broken_image.clone(),
+            damage_image: game_assets.hair_top_damage_image.clone(),
+            time_last_hit: f32::MIN,
         })
         .id();
 }
@@ -128,7 +140,10 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
 pub struct HairComponent {
     pub max_health: f32,
     pub health: f32,
+    pub orig_image: Handle<Image>,
     pub broken_image: Handle<Image>,
+    pub damage_image: Handle<Image>,
+    pub time_last_hit: f32,
 }
 
 #[derive(Component)]
@@ -141,6 +156,7 @@ pub fn hair_system(
     mut collision_events: EventReader<CollisionEvent>,
     game_assets: Res<assets::GameAssets>,
     audio_channel: Res<AudioChannel<crate::SoundEffectsAudioChannel>>,
+    time: Res<Time>,
 ) {
     let mut collision_events_vec = vec![];
     for collision_event in collision_events.iter() {
@@ -159,6 +175,8 @@ pub fn hair_system(
                             hair_component.health -=
                                 louse_component.damage * louse_velocity.linvel.length();
 
+                            hair_component.time_last_hit = time.elapsed_seconds();
+
                             audio_channel.play(
                                 game_assets
                                     .crunch_sounds
@@ -173,8 +191,14 @@ pub fn hair_system(
             }
         }
 
-        if hair_component.health / hair_component.max_health <= 0.5 {
+        let t = time.elapsed_seconds();
+
+        if t - hair_component.time_last_hit < 0.2 {
+            *image = hair_component.damage_image.clone();
+        } else if hair_component.health / hair_component.max_health <= 0.5 {
             *image = hair_component.broken_image.clone();
+        } else {
+            *image = hair_component.orig_image.clone();
         }
 
         if hair_component.health <= 0.0 {
