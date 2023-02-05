@@ -50,5 +50,19 @@ pub fn spawn_hair(commands: &mut Commands, sprite_assets: &assets::GameAssets, p
         .insert(Restitution::new(0.3))
         .insert(states::AppStateComponent(states::AppStates::Game))
         .insert(ImpulseJoint::new(bottom_entity, top_joint))
+        .insert(HealthComponent { health: 100.0 })
+        .insert(HairComponent)
         .id();
 }
+
+#[derive(Component)]
+pub struct HealthComponent {
+    health: f32,
+}
+
+#[derive(Component)]
+pub struct HairComponent;
+
+/*pub fn hair_system(mut hair_query: Query<(Entity, &HealthComponent), With<HairComponent>>) {
+    for ()
+}*/
