@@ -1,35 +1,25 @@
 use crate::{assets, states};
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
-use rand::{seq::SliceRandom, thread_rng, Rng};
+use rand::{thread_rng, Rng};
 
 const CHUNK_HITBOX: Vec2 = Vec2 { x: 10.0, y: 10.0 };
 const CHUNK_VELOCITY: Vec2 = Vec2 { x: 0.0, y: -10.0 };
 const CHUNK_SPIN: f32 = 0.5;
-
-// Event data describing spawning "chunks"
-pub struct SpawnChunkEvent {
-    pub position: Vec2,
-    pub velocity: Vec2,
-}
-
-// Checks for chunk-spawning events and spawns the chunk
-pub fn spawn_chunk_system(
-    mut commands: Commands,
-    sprite_assets: Res<assets::GameAssets>,
-    mut spawn_chunk_events: EventReader<SpawnChunkEvent>,
-) {
-    for event in spawn_chunk_events.iter() {
-        spawn_chunk(&mut commands, &sprite_assets, event.position);
-    }
-}
+const CHUNK_SCALE_MIN: f32 = 0.7;
+const CHUNK_SCALE_MAX: f32 = 1.2;
 
 // Spawn a chunk in the game world
 pub fn spawn_chunk(commands: &mut Commands, sprite_assets: &assets::GameAssets, position: Vec2) {
+    let scale: f32 = thread_rng().gen_range(CHUNK_SCALE_MIN..=CHUNK_SCALE_MAX);
     commands
         .spawn(SpriteBundle {
             texture: sprite_assets.dandruffBig.clone(),
-            transform: Transform::from_translation(position.extend(0.0)),
+            transform: Transform {
+                translation: position.extend(0.0),
+                scale: Vec3::new(scale, scale, 1.0),
+                ..Default::default()
+            },
             ..Default::default()
         })
         .insert(RigidBody::Dynamic)
