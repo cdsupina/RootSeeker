@@ -57,6 +57,13 @@ pub struct GameAssets {
 
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
+
+    //put in gameover assetts later
+    #[asset(path = "sprites/game_over.png")]
+    pub game_over: Handle<Image>,
+
+    #[asset(path = "sprites/win_screen.png")]
+    pub win_screen: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -81,11 +88,17 @@ pub struct MenuAssets {
     pub menu_button_start: Handle <Image>,
 
     #[asset(path = "sprites/menu_button_start_selected.png")]
-    pub menu_button_star_selected: Handle <Image>,
+    pub menu_button_start_selected: Handle <Image>,
 
     #[asset(path = "sprites/menu_button_credits.png")]
     pub menu_button_credits: Handle <Image>,
 
     #[asset(path = "sprites/menu_button_credits_selected.png")]
     pub menu_button_credits_selected: Handle <Image>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct GameOverAssets {
+    // #[asset(path = "sprites/game_over.png")]
+    // pub game_over: Handle<Image>,
 }

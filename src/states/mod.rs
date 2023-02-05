@@ -1,10 +1,10 @@
-use std::time::Duration;
+use std::{time::Duration, /*thread::__FastLocalKeyInner*/};
 
 use bevy::{app::AppExit, prelude::*};
 use bevy_kira_audio::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{assets, hair};
+use crate::{assets::{self, GameOverAssets}, hair};
 
 // states of the game
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -59,6 +59,8 @@ pub fn start_game_system(
 }
 
 pub fn start_gameover_system(
+    mut commands: Commands,
+    game_over: Res<assets::GameAssets>,
     mut keyboard_input: ResMut<Input<KeyCode>>,
     mut app_state: ResMut<State<AppStates>>,
 ) {
@@ -73,12 +75,27 @@ pub fn start_gameover_system(
         // play sound effect
         //audio_channel.play(asset_server.load("sounds/menu_input_success.wav"));
 
+        commands
+        .spawn(SpriteBundle {
+            texture: game_over.game_over.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, 0.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::GameOver));
+
         // reset input
         keyboard_input.reset(KeyCode::L);
     }
+
 }
 
 pub fn start_victory_system(
+    mut commands: Commands,
+    sprite_assets: Res<assets::GameAssets>,
     mut keyboard_input: ResMut<Input<KeyCode>>,
     mut app_state: ResMut<State<AppStates>>,
 ) {
@@ -92,6 +109,18 @@ pub fn start_victory_system(
 
         // play sound effect
         //audio_channel.play(asset_server.load("sounds/menu_input_success.wav"));
+
+        commands
+        .spawn(SpriteBundle {
+            texture: sprite_assets.win_screen.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, -10.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::MainMenu));
 
         // reset input
         keyboard_input.reset(KeyCode::W);
@@ -185,7 +214,19 @@ pub fn setup_main_menu_system(
     mut commands: Commands,
     menu_music_audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
     menu_assets: Res<assets::MenuAssets>,
+    mut keyboard_input: ResMut<Input<KeyCode>>,
 ) {
+    let mut test = -50.0;
+
+    let mut key_test: bool = keyboard_input.just_released(KeyCode::D);
+
+    if key_test {
+        test = 0.0;
+    } else {
+        test = -50.0;
+    }
+  
+
     menu_music_audio_channel
         .play(menu_assets.menu_music.clone())
         .fade_in(AudioTween::new(
@@ -210,7 +251,19 @@ pub fn setup_main_menu_system(
         .spawn(SpriteBundle {
             texture: menu_assets.menu_button_start.clone(),
             transform: Transform {
-                translation: Vec3::new(-150.0, -50.0, 0.1),
+                translation: Vec3::new(-150.0, -50.0, 0.2),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::MainMenu));
+
+        commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.menu_button_start_selected.clone(),
+            transform: Transform {
+                translation: Vec3::new(-150.0, test, 0.1),
                 scale: Vec3::new(1.0, 1.0, 1.0),
                 ..Default::default()
             },
