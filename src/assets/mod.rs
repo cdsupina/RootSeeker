@@ -62,6 +62,12 @@ pub struct GameAssets {
     )]
     pub wahoo_sounds: Vec<Handle<AudioSource>>,
 
+    #[asset(
+        paths("sounds/crunch1.mp3", "sounds/crunch2.mp3", "sounds/crunch3.mp3",),
+        collection(typed)
+    )]
+    pub crunch_sounds: Vec<Handle<AudioSource>>,
+
     #[asset(paths("sprites/dandruff_big.png",), collection(typed))]
     pub dandruff_big_images: Vec<Handle<Image>>,
 
@@ -86,8 +92,12 @@ pub struct GameAssets {
         collection(typed)
     )]
     pub hair_flakes: Vec<Handle<Image>>,
+
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
+
+    #[asset(path = "sounds/hair_die.mp3")]
+    pub hair_die: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]

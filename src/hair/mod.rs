@@ -1,9 +1,11 @@
 use bevy::prelude::*;
+use bevy_kira_audio::{AudioChannel, AudioControl};
 use bevy_rapier2d::prelude::*;
+use rand::seq::SliceRandom;
 
 use crate::{
     assets::{self, GameAssets},
-    louse,
+    chunks, louse,
     states::{self, AppStates},
 };
 
@@ -88,16 +90,18 @@ pub struct RootComponent;
 
 pub fn hair_system(
     mut commands: Commands,
-    mut hair_query: Query<(Entity, &mut HairComponent, &mut Handle<Image>)>,
+    mut hair_query: Query<(Entity, &mut HairComponent, &mut Handle<Image>, &Transform)>,
     louse_query: Query<(Entity, &louse::LouseComponent, &Velocity)>,
     mut collision_events: EventReader<CollisionEvent>,
+    game_assets: Res<assets::GameAssets>,
+    audio_channel: Res<AudioChannel<crate::SoundEffectsAudioChannel>>,
 ) {
     let mut collision_events_vec = vec![];
     for collision_event in collision_events.iter() {
         collision_events_vec.push(collision_event);
     }
 
-    for (hair_entity, mut hair_component, mut image) in hair_query.iter_mut() {
+    for (hair_entity, mut hair_component, mut image, transform) in hair_query.iter_mut() {
         for (louse_entity, louse_component, louse_velocity) in louse_query.iter() {
             for event in collision_events_vec.iter() {
                 match event {
@@ -107,7 +111,15 @@ pub fn hair_system(
                                 && louse_velocity.linvel.length() > 5.0
                         {
                             hair_component.health -=
-                                louse_component.damage * louse_velocity.linvel.length()
+                                louse_component.damage * louse_velocity.linvel.length();
+
+                            audio_channel.play(
+                                game_assets
+                                    .crunch_sounds
+                                    .choose(&mut rand::thread_rng())
+                                    .unwrap()
+                                    .clone(),
+                            );
                         }
                     }
                     _ => {}
@@ -121,6 +133,16 @@ pub fn hair_system(
 
         if hair_component.health <= 0.0 {
             commands.entity(hair_entity).despawn();
+
+            chunks::spawn_chunk_explosion(
+                &mut commands,
+                game_assets.hair_flakes.clone(),
+                Vec2::new(transform.translation.x, transform.translation.y),
+                10,
+                0.5,
+            );
+
+            audio_channel.play(game_assets.hair_die.clone());
         }
     }
 }
@@ -129,7 +151,7 @@ pub fn check_roots_system(
     root_query: Query<&RootComponent>,
     mut app_state: ResMut<State<AppStates>>,
 ) {
-    if let Result::Err(_) = root_query.get_single() {
+    if root_query.is_empty() {
         app_state.set(AppStates::Victory).unwrap();
     }
 }
