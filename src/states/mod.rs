@@ -180,7 +180,7 @@ pub fn setup_game_system(
     hair::spawn_hair(&mut commands, &sprite_assets, Vec2::new(-190.0, -130.0));
 }
 
-// setup level of the game
+// setup level of the game dh: Main Men
 pub fn setup_main_menu_system(
     mut commands: Commands,
     menu_music_audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
@@ -196,7 +196,7 @@ pub fn setup_main_menu_system(
 
         commands
         .spawn(SpriteBundle {
-            texture: menu_assets.menuTitle.clone(),
+            texture: menu_assets.menu_title.clone(),
             transform: Transform {
                 translation: Vec3::new(0.0, 0.0, 0.0),
                 scale: Vec3::new(1.0, 1.0, 1.0),

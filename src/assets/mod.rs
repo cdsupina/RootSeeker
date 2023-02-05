@@ -68,24 +68,24 @@ pub struct MenuAssets {
     pub celebration: Handle<AudioSource>,
 
     //image assetts
-    #[asset(path = "sprites/menuTitle.png")]
-    pub menuTitle: Handle<Image>,
+    #[asset(path = "sprites/menu_title.png")]
+    pub menu_title: Handle<Image>,
 
-    #[asset(path = "sprites/button_goDefault.png")]
-    pub button_goDefault: Handle <Image>,
+    #[asset(path = "sprites/button_go_default.png")]
+    pub button_go_default: Handle <Image>,
 
-    #[asset(path = "sprites/button_goSelected.png")]
-    pub button_goSelected: Handle <Image>,
+    #[asset(path = "sprites/button_go_selected.png")]
+    pub button_go_selected: Handle <Image>,
 
     #[asset(path = "sprites/menu_button_start.png")]
     pub menu_button_start: Handle <Image>,
 
-    #[asset(path = "sprites/menu_button_startSelected.png")]
-    pub menu_button_startSelected: Handle <Image>,
+    #[asset(path = "sprites/menu_button_start_selected.png")]
+    pub menu_button_star_selected: Handle <Image>,
 
     #[asset(path = "sprites/menu_button_credits.png")]
     pub menu_button_credits: Handle <Image>,
 
-    #[asset(path = "sprites/menu_button_creditsSelected.png")]
-    pub menu_button_creditsSelected: Handle <Image>,
+    #[asset(path = "sprites/menu_button_credits_selected.png")]
+    pub menu_button_credits_selected: Handle <Image>,
 }
