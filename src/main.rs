@@ -23,14 +23,26 @@ mod ui;
 const FIRE_LINE: f32 = -300.0;
 const FLOOR_Y: f32 = -200.0;
 const GRAVITY: f32 = -550.0;
-const LOUSE_QUEUE: [louse::LouseType; 8] = [
-    louse::LouseType::Basic,
-    louse::LouseType::Exploding,
+const LOUSE_QUEUE: [louse::LouseType; 20] = [
     louse::LouseType::Basic,
     louse::LouseType::Basic,
     louse::LouseType::Basic,
     louse::LouseType::Exploding,
     louse::LouseType::Basic,
+    louse::LouseType::Exploding,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+    louse::LouseType::Exploding,
+    louse::LouseType::Basic,
+    louse::LouseType::Exploding,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+    louse::LouseType::Exploding,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+    louse::LouseType::Basic,
+    louse::LouseType::Exploding,
     louse::LouseType::Basic,
 ];
 const LOSE_TIME: f32 = 2.0;

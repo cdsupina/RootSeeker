@@ -1,11 +1,14 @@
-use std::{time::Duration, /*thread::__FastLocalKeyInner*/};
+use std::time::Duration;
 
 use bevy::{app::AppExit, log::Level, prelude::*};
 use bevy_kira_audio::prelude::*;
 use bevy_rapier2d::prelude::*;
 use rand::{thread_rng, Rng};
 
-use crate::{assets::{self, GameOverAssets}, hair};
+use crate::{
+    assets::{self, GameOverAssets},
+    hair,
+};
 //use bevy_hanabi::prelude::*;
 
 use crate::{
@@ -24,6 +27,8 @@ pub enum AppStates {
     Game,
     GameOver,
     Victory,
+    Credits,
+    Instructions,
 }
 
 // used for tagging entities that are part of the game state
@@ -84,21 +89,20 @@ pub fn start_gameover_system(
         //audio_channel.play(asset_server.load("sounds/menu_input_success.wav"));
 
         commands
-        .spawn(SpriteBundle {
-            texture: game_over.game_over.clone(),
-            transform: Transform {
-                translation: Vec3::new(0.0, 0.0, 0.0),
-                scale: Vec3::new(1.0, 1.0, 1.0),
+            .spawn(SpriteBundle {
+                texture: game_over.game_over.clone(),
+                transform: Transform {
+                    translation: Vec3::new(0.0, 0.0, 0.0),
+                    scale: Vec3::new(1.0, 1.0, 1.0),
+                    ..Default::default()
+                },
                 ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(AppStateComponent(AppStates::GameOver));
+            })
+            .insert(AppStateComponent(AppStates::GameOver));
 
         // reset input
         keyboard_input.reset(KeyCode::L);
     }
-
 }
 
 pub fn start_victory_system(
@@ -119,16 +123,16 @@ pub fn start_victory_system(
         //audio_channel.play(asset_server.load("sounds/menu_input_success.wav"));
 
         commands
-        .spawn(SpriteBundle {
-            texture: sprite_assets.win_screen.clone(),
-            transform: Transform {
-                translation: Vec3::new(0.0, 0.0, -10.0),
-                scale: Vec3::new(1.0, 1.0, 1.0),
+            .spawn(SpriteBundle {
+                texture: sprite_assets.win_screen.clone(),
+                transform: Transform {
+                    translation: Vec3::new(0.0, 0.0, -10.0),
+                    scale: Vec3::new(1.0, 1.0, 1.0),
+                    ..Default::default()
+                },
                 ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(AppStateComponent(AppStates::MainMenu));
+            })
+            .insert(AppStateComponent(AppStates::MainMenu));
 
         // reset input
         keyboard_input.reset(KeyCode::W);
@@ -269,7 +273,6 @@ pub fn setup_main_menu_system(
     } else {
         test = -50.0;
     }
-  
 
     menu_music_audio_channel
         .play(menu_assets.menu_music.clone())
@@ -279,7 +282,7 @@ pub fn setup_main_menu_system(
         ))
         .looped();
 
-        commands
+    commands
         .spawn(SpriteBundle {
             texture: menu_assets.menu_title.clone(),
             transform: Transform {
@@ -291,7 +294,7 @@ pub fn setup_main_menu_system(
         })
         .insert(AppStateComponent(AppStates::MainMenu));
 
-        commands
+    commands
         .spawn(SpriteBundle {
             texture: menu_assets.menu_button_start.clone(),
             transform: Transform {
@@ -303,7 +306,7 @@ pub fn setup_main_menu_system(
         })
         .insert(AppStateComponent(AppStates::MainMenu));
 
-        commands
+    commands
         .spawn(SpriteBundle {
             texture: menu_assets.menu_button_start_selected.clone(),
             transform: Transform {
@@ -315,7 +318,7 @@ pub fn setup_main_menu_system(
         })
         .insert(AppStateComponent(AppStates::MainMenu));
 
-        commands
+    commands
         .spawn(SpriteBundle {
             texture: menu_assets.menu_button_credits.clone(),
             transform: Transform {

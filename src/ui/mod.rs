@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     assets::GameAssets,
-    level::LevelResource,
+    level::{self, LevelResource},
     states::{AppStateComponent, AppStates},
 };
 
@@ -19,7 +19,10 @@ pub fn game_ui_system(
         commands.entity(entity).despawn();
     }
 
-    for (i, louse_type) in level_resource.louse_queue.iter().enumerate() {
+    let mut louse_queue_copy = level_resource.louse_queue.clone();
+    louse_queue_copy.reverse();
+
+    for (i, louse_type) in louse_queue_copy.iter().enumerate() {
         commands
             .spawn(ImageBundle {
                 image: match louse_type {
