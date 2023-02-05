@@ -9,20 +9,23 @@ use crate::{
     states::{self, AppStates},
 };
 
-const MIN_MIDDLE_SEGMENTS: i32 = 0;
-const MAX_MIDDLE_SEGMENTS: i32 = 3;
+// these are used with a sqrt function to decide the n of mid segments
+const MID_SEG_LOW: i32 = 0;
+const MID_SEG_HIGH: i32 = 100;
 
 pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, position: Vec2) {
-    let hair_width = 12.0;
     let root_height = 23.0;
     let seg_collider_height = 20.0;
     let seg_position_multiplier = 60.0;
     let joint_top = 30.0;
     let joint_bottom = -30.0;
     let top_extra_pos = 82.0;
+    let base_stiffness = 500.0;
+    let stiffness_decay = 1.4;
+    let base_radius = 14.0;
+    let radius_decay = 0.65;
 
-    let num_mid_segments = thread_rng().gen_range(MIN_MIDDLE_SEGMENTS..=MAX_MIDDLE_SEGMENTS);
-
+    let num_mid_segments = 10 - (thread_rng().gen_range(MID_SEG_LOW..=MID_SEG_HIGH) as f32).sqrt().floor() as i32;
     // create root segment
     let root_entity = commands
         .spawn(SpriteBundle {
@@ -31,7 +34,7 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
             ..Default::default()
         })
         .insert(RigidBody::Fixed)
-        .insert(Collider::capsule_y(root_height, hair_width))
+        .insert(Collider::capsule_y(root_height, base_radius))
         .insert(Restitution::new(0.3))
         .insert(states::AppStateComponent(states::AppStates::Game))
         .insert(ActiveEvents::COLLISION_EVENTS)
@@ -47,13 +50,15 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
     let bottom_joint = RevoluteJointBuilder::new()
         .local_anchor1(Vec2::new(0.0, 32.0))
         .local_anchor2(Vec2::new(0.0, bottom_joint_bottom))
-        .motor_position(0.0, 800.0, 10.0);
+        .motor_position(0.0, base_stiffness, 10.0);
 
     // use these to chain to the next midjoint
     let mut prev_entity = root_entity;
     let mut prev_joint = bottom_joint;
     let mut i = 0;
     while i < num_mid_segments {
+        let radius = base_radius * (f32::powf(radius_decay, i as f32 + 1.0));
+
         let mid_entity = commands
             .spawn(SpriteBundle {
                 texture: game_assets.hair_bottom_image.clone(),
@@ -65,7 +70,7 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
                 ..Default::default()
             })
             .insert(RigidBody::Dynamic)
-            .insert(Collider::capsule_y(seg_collider_height, hair_width))
+            .insert(Collider::capsule_y(seg_collider_height, radius))
             .insert(Restitution::new(0.3))
             .insert(states::AppStateComponent(states::AppStates::Game))
             .insert(ImpulseJoint::new(prev_entity, prev_joint))
@@ -78,20 +83,23 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
             .id();
 
         let mid_joint_bottom = if i == num_mid_segments - 1 {
-            joint_bottom -20.0
+            joint_bottom - 20.0
         } else {
             joint_bottom
         };
+        let stiffness = base_stiffness * (f32::powf(stiffness_decay, i as f32 + 1.0));
+
         let mid_joint = RevoluteJointBuilder::new()
             .local_anchor1(Vec2::new(0.0, joint_top))
             .local_anchor2(Vec2::new(0.0, mid_joint_bottom))
-            .motor_position(0.0, 130.0, 10.0);
+            .motor_position(0.0, stiffness, 10.0);
 
         i = i + 1;
         prev_entity = mid_entity;
         prev_joint = mid_joint;
     }
 
+    let radius = base_radius * (f32::powf(radius_decay, i as f32 + 1.0));
     let top_entity = commands
         .spawn(SpriteBundle {
             texture: game_assets.hair_top_image.clone(),
@@ -103,7 +111,7 @@ pub fn spawn_hair(commands: &mut Commands, game_assets: &assets::GameAssets, pos
             ..Default::default()
         })
         .insert(RigidBody::Dynamic)
-        .insert(Collider::capsule_y(43.0, 6.0))
+        .insert(Collider::capsule_y(43.0, radius))
         .insert(Restitution::new(0.3))
         .insert(states::AppStateComponent(states::AppStates::Game))
         .insert(ImpulseJoint::new(prev_entity, prev_joint))
