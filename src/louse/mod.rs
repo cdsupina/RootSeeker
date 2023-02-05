@@ -12,7 +12,7 @@ use rand::{seq::SliceRandom, thread_rng, Rng};
 const LOUSE_HITBOX: Vec2 = Vec2 { x: 10.0, y: 10.0 };
 const LOUSE_SPIN: f32 = 2.0;
 const LOUSE_DESPAWN_TIME: f32 = 3.0;
-const LOUSE_MIN_VEL: f32 = 5.0;
+const LOUSE_MIN_VEL: f32 = 8.0;
 
 #[derive(Clone, Debug)]
 pub enum LouseType {
