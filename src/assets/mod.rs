@@ -13,6 +13,15 @@ pub struct GameAssets {
     #[asset(path = "sprites/scalp_ground.png")]
     pub ground_image: Handle<Image>,
 
+    #[asset(path = "sprites/hair_root.png")]
+    pub hair_root_image: Handle<Image>,
+
+    #[asset(path = "sprites/hair_bottom.png")]
+    pub hair_bottom_image: Handle<Image>,
+
+    #[asset(path = "sprites/hair_top.png")]
+    pub hair_top_image: Handle<Image>,
+
     #[asset(path = "sounds/slingshot_release.mp3")]
     pub slingshot_release_sound: Handle<AudioSource>,
 
