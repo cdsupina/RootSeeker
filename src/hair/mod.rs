@@ -193,7 +193,7 @@ pub fn hair_system(
 
         let t = time.elapsed_seconds();
 
-        if (t - hair_component.time_last_hit < 0.3) {
+        if t - hair_component.time_last_hit < 0.2 {
             *image = hair_component.damage_image.clone();
         } else if hair_component.health / hair_component.max_health <= 0.5 {
             *image = hair_component.broken_image.clone();
