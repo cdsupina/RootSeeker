@@ -88,18 +88,6 @@ pub fn start_gameover_system(
         // play sound effect
         //audio_channel.play(asset_server.load("sounds/menu_input_success.wav"));
 
-        commands
-            .spawn(SpriteBundle {
-                texture: game_over.game_over.clone(),
-                transform: Transform {
-                    translation: Vec3::new(0.0, 0.0, 0.0),
-                    scale: Vec3::new(1.0, 1.0, 1.0),
-                    ..Default::default()
-                },
-                ..Default::default()
-            })
-            .insert(AppStateComponent(AppStates::GameOver));
-
         // reset input
         keyboard_input.reset(KeyCode::L);
     }
@@ -121,18 +109,6 @@ pub fn start_victory_system(
 
         // play sound effect
         //audio_channel.play(asset_server.load("sounds/menu_input_success.wav"));
-
-        commands
-            .spawn(SpriteBundle {
-                texture: sprite_assets.win_screen.clone(),
-                transform: Transform {
-                    translation: Vec3::new(0.0, 0.0, -10.0),
-                    scale: Vec3::new(1.0, 1.0, 1.0),
-                    ..Default::default()
-                },
-                ..Default::default()
-            })
-            .insert(AppStateComponent(AppStates::MainMenu));
 
         // reset input
         keyboard_input.reset(KeyCode::W);
@@ -378,42 +354,6 @@ pub fn setup_main_menu_system(
             ..Default::default()
         })
         .insert(AppStateComponent(AppStates::MainMenu));
-
-    commands
-        .spawn(SpriteBundle {
-            texture: menu_assets.menu_button_start.clone(),
-            transform: Transform {
-                translation: Vec3::new(-150.0, -50.0, 0.2),
-                scale: Vec3::new(1.0, 1.0, 1.0),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(AppStateComponent(AppStates::MainMenu));
-
-    commands
-        .spawn(SpriteBundle {
-            texture: menu_assets.menu_button_start_selected.clone(),
-            transform: Transform {
-                translation: Vec3::new(-150.0, test, 0.1),
-                scale: Vec3::new(1.0, 1.0, 1.0),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(AppStateComponent(AppStates::MainMenu));
-
-    commands
-        .spawn(SpriteBundle {
-            texture: menu_assets.menu_button_credits.clone(),
-            transform: Transform {
-                translation: Vec3::new(-150.0, -125.0, 0.1),
-                scale: Vec3::new(1.0, 1.0, 1.0),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(AppStateComponent(AppStates::MainMenu));
 }
 
 pub fn clean_up_main_menu_system(audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>) {
@@ -426,6 +366,7 @@ pub fn clean_up_game_system(audio_channel: Res<AudioChannel<crate::GameMusicAudi
 
 // setup level of the game
 pub fn setup_victory_menu_system(
+    mut commands: Commands,
     sound_effects_audio_channel: Res<AudioChannel<crate::SoundEffectsAudioChannel>>,
 
     menu_music_audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
@@ -440,6 +381,18 @@ pub fn setup_victory_menu_system(
             AudioEasing::Linear,
         ))
         .looped();
+
+    commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.win_screen.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, -10.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::Victory));
 }
 
 pub fn clean_up_victory_menu_system(
@@ -450,6 +403,7 @@ pub fn clean_up_victory_menu_system(
 
 // setup level of the game
 pub fn setup_gameover_menu_system(
+    mut commands: Commands,
     audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
     menu_assets: Res<assets::MenuAssets>,
 ) {
@@ -460,6 +414,18 @@ pub fn setup_gameover_menu_system(
             AudioEasing::Linear,
         ))
         .looped();
+
+    commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.game_over.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, 0.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::GameOver));
 }
 
 pub fn clean_up_gameover_menu_system(

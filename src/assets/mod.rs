@@ -135,9 +135,6 @@ pub struct GameAssets {
     #[asset(path = "sprites/game_over.png")]
     pub game_over: Handle<Image>,
 
-    #[asset(path = "sprites/win_screen.png")]
-    pub win_screen: Handle<Image>,
-
     #[asset(path = "sounds/hair_die.mp3")]
     pub hair_die: Handle<AudioSource>,
 
@@ -156,8 +153,14 @@ pub struct GameAssets {
 
 #[derive(AssetCollection, Resource)]
 pub struct MenuAssets {
+    #[asset(path = "sprites/game_over.png")]
+    pub game_over: Handle<Image>,
+
     #[asset(path = "sounds/ScalpChillMusic.mp3")]
     pub menu_music: Handle<AudioSource>,
+
+    #[asset(path = "sprites/win_screen.png")]
+    pub win_screen: Handle<Image>,
 
     #[asset(path = "sounds/celebration.mp3")]
     pub celebration: Handle<AudioSource>,
