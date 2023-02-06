@@ -58,6 +58,15 @@ pub struct GameAssets {
     #[asset(path = "sprites/prompt.png")]
     pub prompt: Handle<Image>,
 
+    #[asset(path = "sprites/hair_background_des.png")]
+    pub bg_hair: Handle<Image>,
+
+    #[asset(path = "sprites/hair_background_desFlip.png")]
+    pub bg_hair2: Handle<Image>,
+
+    #[asset(path = "sprites/hair_background_des_copy.png")]
+    pub bg_hair3: Handle<Image>,
+
     #[asset(path = "sounds/slingshot_release.mp3")]
     pub slingshot_release_sound: Handle<AudioSource>,
 

@@ -222,6 +222,40 @@ pub fn setup_game_system(
         })
         .insert(AppStateComponent(AppStates::Game));
 
+    // spawn the background hair(s)
+    commands
+        .spawn(SpriteBundle {
+            texture: sprite_assets.bg_hair.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, crate::FLOOR_Y + 90.0, -3.0),
+                scale: Vec3::new(1.2, 1.2, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::Game));
+    commands
+        .spawn(SpriteBundle {
+            texture: sprite_assets.bg_hair2.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, crate::FLOOR_Y + 190.0, -3.1),
+                scale: Vec3::new(1.1, 1.1, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::Game));
+    commands
+        .spawn(SpriteBundle {
+            texture: sprite_assets.bg_hair3.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, crate::FLOOR_Y + 190.0, -3.2),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::Game));
     // spawn the ground image
     commands
         .spawn(SpriteBundle {
