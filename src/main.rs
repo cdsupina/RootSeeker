@@ -160,13 +160,15 @@ fn main() {
 
     app.add_system_set(
         SystemSet::on_enter(states::AppStates::Victory)
-            .with_system(states::setup_victory_menu_system),
+            .with_system(states::setup_victory_menu_system)
+            .with_system(states::setup_dance_lice),
     );
 
     app.add_system_set(
         SystemSet::on_update(states::AppStates::Victory)
             .with_system(states::start_game_system)
-            .with_system(states::quit_game_system),
+            .with_system(states::quit_game_system)
+            .with_system(states::animate_dance_lice),
     );
 
     app.add_system_set(
