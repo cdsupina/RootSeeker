@@ -119,7 +119,6 @@ pub struct GameAssets {
 
     #[asset(
         paths(
-            "sprites/bug_part1.png",
             "sprites/bug_part2.png",
             "sprites/bug_part3.png",
             "sprites/bug_part4.png",
@@ -127,6 +126,9 @@ pub struct GameAssets {
         collection(typed)
     )]
     pub bug_parts: Vec<Handle<Image>>,
+
+    #[asset(paths("sprites/bug_part1.png",), collection(typed))]
+    pub bug_head: Vec<Handle<Image>>,
 
     #[asset(path = "sounds/ScalpInvaders.mp3")]
     pub game_music: Handle<AudioSource>,
