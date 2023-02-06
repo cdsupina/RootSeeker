@@ -150,8 +150,15 @@ pub fn louse_behavior_system(
                     &mut commands,
                     game_assets.bug_parts.clone(),
                     Vec2::new(louse_trans.translation.x, louse_trans.translation.y),
-                    20,
+                    15,
                     1.0,
+                );
+                spawn_chunk_explosion(
+                    &mut commands,
+                    game_assets.bug_head.clone(),
+                    Vec2::new(louse_trans.translation.x, louse_trans.translation.y),
+                    1,
+                    1.5,
                 );
                 audio_channel.play(game_assets.bug_explode.clone());
             } else {
