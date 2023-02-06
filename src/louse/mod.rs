@@ -106,7 +106,7 @@ pub fn spawn_louse(
                 .insert(ColliderMassProperties::Density(2.0))
                 .insert(ActiveEvents::COLLISION_EVENTS)
                 .insert(LouseComponent {
-                    damage: 1.5,
+                    damage: 1.0,
                     despawn_timer: Timer::from_seconds(0.1, TimerMode::Once),
                     should_explode: true,
                 })

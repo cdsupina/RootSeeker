@@ -23,7 +23,7 @@ mod ui;
 const FIRE_LINE: f32 = -300.0;
 const FLOOR_Y: f32 = -200.0;
 const GRAVITY: f32 = -550.0;
-const LOUSE_QUEUE: [louse::LouseType; 20] = [
+const LOUSE_QUEUE: [louse::LouseType; 18] = [
     louse::LouseType::Basic,
     louse::LouseType::Basic,
     louse::LouseType::Basic,
@@ -38,8 +38,6 @@ const LOUSE_QUEUE: [louse::LouseType; 20] = [
     louse::LouseType::Basic,
     louse::LouseType::Basic,
     louse::LouseType::Exploding,
-    louse::LouseType::Basic,
-    louse::LouseType::Basic,
     louse::LouseType::Basic,
     louse::LouseType::Basic,
     louse::LouseType::Exploding,
@@ -132,7 +130,8 @@ fn main() {
 
     app.add_system_set(
         SystemSet::on_update(states::AppStates::MainMenu)
-            .with_system(states::start_game_system)
+            .with_system(states::start_instructions_system)
+            .with_system(states::start_credits_system)
             .with_system(states::quit_game_system),
     );
 
@@ -174,6 +173,33 @@ fn main() {
         SystemSet::on_exit(states::AppStates::Victory)
             .with_system(states::clear_state_system)
             .with_system(states::clean_up_victory_menu_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_enter(states::AppStates::Instructions)
+            .with_system(states::setup_instructions_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_update(states::AppStates::Instructions)
+            .with_system(states::start_game_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_exit(states::AppStates::Instructions).with_system(states::clear_state_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_enter(states::AppStates::Credits).with_system(states::setup_credits_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_update(states::AppStates::Credits)
+            .with_system(states::start_main_menu_system),
+    );
+
+    app.add_system_set(
+        SystemSet::on_exit(states::AppStates::Credits).with_system(states::clear_state_system),
     );
 
     app.run();
