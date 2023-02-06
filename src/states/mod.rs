@@ -27,6 +27,8 @@ pub enum AppStates {
     Game,
     GameOver,
     Victory,
+    Credits,
+    Instructions,
 }
 
 // used for tagging entities that are part of the game state
@@ -212,7 +214,7 @@ pub fn setup_game_system(
         .spawn(SpriteBundle {
             texture: sprite_assets.prompt.clone(),
             transform: Transform {
-                translation: Vec3::new(-370.0,180.0, -2.0),
+                translation: Vec3::new(-370.0, 180.0, -2.0),
                 scale: Vec3::new(1.0, 1.0, 1.0),
                 ..Default::default()
             },
@@ -265,6 +267,44 @@ pub fn setup_game_system(
             10.0,
         );
         i = i + 1;
+    }
+}
+
+pub fn start_instructions_system(
+    mut keyboard_input: ResMut<Input<KeyCode>>,
+    mut app_state: ResMut<State<AppStates>>,
+) {
+    let input = keyboard_input.just_released(KeyCode::Return)
+        || keyboard_input.just_released(KeyCode::Space);
+
+    if input {
+        app_state.set(AppStates::Instructions).unwrap();
+        keyboard_input.reset(KeyCode::Return);
+        keyboard_input.reset(KeyCode::Space);
+    }
+}
+
+pub fn start_credits_system(
+    mut keyboard_input: ResMut<Input<KeyCode>>,
+    mut app_state: ResMut<State<AppStates>>,
+) {
+    let input = keyboard_input.just_released(KeyCode::C);
+
+    if input {
+        app_state.set(AppStates::Credits).unwrap();
+        keyboard_input.reset(KeyCode::C);
+    }
+}
+
+pub fn start_main_menu_system(
+    mut keyboard_input: ResMut<Input<KeyCode>>,
+    mut app_state: ResMut<State<AppStates>>,
+) {
+    let input = keyboard_input.just_released(KeyCode::M);
+
+    if input {
+        app_state.set(AppStates::MainMenu).unwrap();
+        keyboard_input.reset(KeyCode::M);
     }
 }
 
@@ -392,4 +432,42 @@ pub fn clean_up_gameover_menu_system(
     audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
 ) {
     audio_channel.stop();
+}
+
+// setup level of the game
+pub fn setup_instructions_system(
+    audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
+    menu_assets: Res<assets::MenuAssets>,
+    mut commands: Commands,
+) {
+    commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.instructions_screen.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, -10.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::Instructions));
+}
+
+// setup level of the game
+pub fn setup_credits_system(
+    audio_channel: Res<AudioChannel<crate::MenuMusicAudioChannel>>,
+    menu_assets: Res<assets::MenuAssets>,
+    mut commands: Commands,
+) {
+    commands
+        .spawn(SpriteBundle {
+            texture: menu_assets.credits_screen.clone(),
+            transform: Transform {
+                translation: Vec3::new(0.0, 0.0, -10.0),
+                scale: Vec3::new(1.0, 1.0, 1.0),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(AppStateComponent(AppStates::Credits));
 }
