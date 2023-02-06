@@ -471,3 +471,48 @@ pub fn setup_credits_system(
         })
         .insert(AppStateComponent(AppStates::Credits));
 }
+
+#[derive(Component, Deref, DerefMut)]
+pub struct AnimationTimer(Timer);
+
+pub fn animate_dance_lice(
+    time: Res<Time>,
+    texture_atlases: Res<Assets<TextureAtlas>>,
+    mut query: Query<(
+        &mut AnimationTimer,
+        &mut TextureAtlasSprite,
+        &Handle<TextureAtlas>,
+    )>,
+) {
+    for (mut timer, mut sprite, texture_atlas_handle) in &mut query {
+        timer.tick(time.delta());
+        if timer.just_finished() {
+            let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
+            sprite.index = (sprite.index + 1) % texture_atlas.textures.len();
+        }
+    }
+}
+
+pub fn setup_dance_lice(
+    mut commands: Commands,
+    menu_assets: Res<assets::MenuAssets>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+) {
+    let texture_handle = menu_assets.dance_sheet.clone();
+    let texture_atlas =
+        TextureAtlas::from_grid(texture_handle, Vec2::new(151.0, 155.0), 4, 1, None, None);
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+    commands
+        .spawn((
+            SpriteSheetBundle {
+                texture_atlas: texture_atlas_handle,
+                transform: Transform {
+                    translation: Vec3::new(-225.0, -25.0, 0.0),
+                    ..default()
+                },
+                ..default()
+            },
+            AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+        ))
+        .insert(AppStateComponent(AppStates::Victory));
+}
