@@ -192,6 +192,9 @@ pub struct MenuAssets {
 
     #[asset(path = "sprites/screen_credits.png")]
     pub credits_screen: Handle<Image>,
+    
+    #[asset(path = "sprites/dancing_louse_spritesheet.png")]
+    pub dance_sheet: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
